@@ -6,9 +6,13 @@
 #### 安装教程
 
 1、将类库引用到项目中
+
 2、在 appsettings.json 中配置网站根地址 WebRootUrl 
+
 3、在 Startup.cs 中的 ConfigureServices 方法里调用 services.AddAttributeQuartz(); 添加特性定时服务
+
 4、在 Startup.cs 中的 Configure 方法里调用 app.StartAttributeQuartz(Configuration["WebRootUrl"]); 来启动特性定时任务
+
 
 #### 使用说明
 
