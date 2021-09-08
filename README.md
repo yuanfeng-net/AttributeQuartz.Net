@@ -18,6 +18,10 @@
 
 1、完成安装操作之后，只需要在需要执行定时任务的Action上加入特性 QuartzTask 就可以实现定时任务了
 
+#### 注意事项
+
+1、如果不指定Router参数，则需要Controller路由配置为  **[Route("/[controller]/[action]")]** 
+
 #### 参与贡献
 
 QQ:279202647
