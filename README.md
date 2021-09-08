@@ -22,6 +22,8 @@
 
 1、如果不指定Router参数，则需要Controller路由配置为  **[Route("/[controller]/[action]")]** 
 
+2、如果指定CronExpression参数，则不需要指定IntervalInSeconds、IsRepeatForever、RepeatCount参数
+
 #### 参与贡献
 
 QQ:279202647
