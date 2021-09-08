@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Copyright>Core园主</Copyright>
+    <Authors>Core园主</Authors>
+    <PackageProjectUrl>https://gitee.com/coreyuan/attribute-quartz</PackageProjectUrl>
+    <NeutralLanguage />
+    <Description>引用这款项目可以使你的接口支持特性定时任务，在控制器下的接口上加上特性，即可实现接口定时执行，具体使用方法可以查看项目url</Description>
   </PropertyGroup>
 
   <ItemGroup>
