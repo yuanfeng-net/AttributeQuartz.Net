@@ -24,7 +24,7 @@
 
 2、如果指定CronExpression参数，则不需要指定IntervalInSeconds、IsRepeatForever、RepeatCount参数
 
-3、此版本暂不支持调用需要权限验证的接口，如果需要调用权限验证，请自行下载源码，在请求处添加权限请求头即可
+3、此版本暂不支持调用需要权限验证的接口，如果需要调用权限验证，请自行下载源码，在请求处添加权限请求头即可，或者加上AllowAnonymous特效
 
 #### 参与贡献
 
