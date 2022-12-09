@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -28,19 +29,25 @@ namespace Test
         {
 
             services.AddControllers();
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Test", Version = "v1" });
             });
 
+            //å¦‚æœè®¾ç½®AddAttributeQuartzçš„isAutoå‚æ•°ä¸ºfalseï¼Œåˆ™éœ€è¦æ‰‹åŠ¨æ·»åŠ æ§åˆ¶å™¨çš„ä¾èµ–æ³¨å…¥
+            //services.TryAddTransient<Controllers.TestController>();
 
-            //Ìí¼ÓÌØĞÔ¶¨Ê±ÈÎÎñ
+            //æ·»åŠ ç‰¹æ€§å®šæ—¶ä»»åŠ¡
             services.AddAttributeQuartz();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+          
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -58,8 +65,8 @@ namespace Test
             });
 
 
-            //Æô¶¯ÌØĞÔ¶¨Ê±ÈÎÎñ
-            app.StartAttributeQuartz(Configuration["WebRootUrl"]);
+            //å¯åŠ¨ç‰¹æ€§å®šæ—¶ä»»åŠ¡
+            app.StartAttributeQuartz();
         }
     }
 }

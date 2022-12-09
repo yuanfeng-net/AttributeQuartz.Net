@@ -16,9 +16,14 @@ namespace AttributeQuartz
         public MethodInfo Method { get; set; }
 
         /// <summary>
-        /// 站点根目录
+        /// 服务类
         /// </summary>
-        public string WebRoot { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
+
+        /// <summary>
+        /// 控制器类型
+        /// </summary>
+        public Type ControllerType { get; set; }
 
         /// <summary>
         /// 特性参数

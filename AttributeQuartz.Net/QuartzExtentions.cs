@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Quartz;
 using Quartz.Impl;
+using Quartz.Impl.AdoJobStore.Common;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -22,10 +24,31 @@ namespace AttributeQuartz
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddAttributeQuartz(this IServiceCollection services)
+        public static IServiceCollection AddAttributeQuartz(this IServiceCollection services,bool isAuto=true)
         {
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 
+            if (isAuto)
+            {
+                var assembly = Assembly.GetEntryAssembly().GetTypes().AsEnumerable()
+           .Where(type => typeof(ControllerBase).IsAssignableFrom(type)).ToList();
+
+                assembly.ForEach(r =>
+                {
+                    foreach (var methodInfo in r.GetMethods())
+                    {
+                        foreach (Attribute attribute in methodInfo.GetCustomAttributes())
+                        {
+                            if (attribute is QuartzTaskAttribute taskAttribute)
+                            {
+                                services.TryAddTransient(r);
+                                return;
+                            }
+                        }
+                    }
+                });
+
+            }
             return services;
         }
 
@@ -35,8 +58,11 @@ namespace AttributeQuartz
         /// <param name="app"></param>
         /// <param name="webRoot">站点根目录</param>
         /// <returns></returns>
-        public static IApplicationBuilder StartAttributeQuartz(this IApplicationBuilder app, string webRoot)
+        public static IApplicationBuilder StartAttributeQuartz(this IApplicationBuilder app)
         {
+
+            var provider = app.ApplicationServices.CreateScope().ServiceProvider;
+
             ISchedulerFactory schedulerFactory = new StdSchedulerFactory();
             IScheduler ischeduler = schedulerFactory.GetScheduler().Result;
 
@@ -53,7 +79,7 @@ namespace AttributeQuartz
                     {
                         if (attribute is QuartzTaskAttribute taskAttribute)
                         {
-                            var (job, trigger) = CreateActionQuartz(methodInfo, taskAttribute, webRoot);
+                            var (job, trigger) = CreateActionQuartz(methodInfo, taskAttribute,r,provider);
 
                             quartzJobs.Add(job, new List<ITrigger>() { trigger });
                         }
@@ -74,10 +100,10 @@ namespace AttributeQuartz
         /// <param name="attribute">特性</param>
         /// <param name="webRoot">网站根目录</param>
         /// <returns></returns>
-        private static (IJobDetail job, ITrigger trigger) CreateActionQuartz(MethodInfo method, QuartzTaskAttribute attribute, string webRoot)
+        private static (IJobDetail job, ITrigger trigger) CreateActionQuartz(MethodInfo method, QuartzTaskAttribute attribute,Type type, IServiceProvider provider)
         {
             IDictionary<string, object> dic = new Dictionary<string, object>() {
-                { "obj",new QuartzData{ WebRoot=webRoot, Method=method,Attribute=attribute } }
+                { "obj",new QuartzData{ ServiceProvider=provider,ControllerType=type, Method=method,Attribute=attribute } }
             };
 
             IJobDetail job = JobBuilder.Create<QuartzJob>().WithIdentity(method.Name, method.DeclaringType.Name).SetJobData(new JobDataMap(dic)).Build();

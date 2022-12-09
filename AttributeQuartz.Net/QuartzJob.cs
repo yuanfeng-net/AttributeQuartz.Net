@@ -1,6 +1,8 @@
-﻿using Quartz;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Quartz;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,19 +23,20 @@ namespace AttributeQuartz
         {
             var data= context.JobDetail.JobDataMap.Get("obj") as QuartzData;
 
+            var scope= data.ServiceProvider.CreateScope();
+
+            var controller= scope.ServiceProvider.GetService(data.ControllerType);
+
+            if (controller == null)
+            {
+                Console.WriteLine($"AttributeQuartz：未正确配置控制器{data.ControllerType.Name}的依赖注入！");
+                Debug.WriteLine($"AttributeQuartz：未正确配置控制器{data.ControllerType.Name}的依赖注入！");
+                return Task.CompletedTask;
+            }
+
             return Task.Run(() =>
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    string path = $"/{data.Method.DeclaringType.Name.Replace("Controller", "")}/{data.Method.Name}";
-                    //判断是否有指定接口路由地址
-                    if (!string.IsNullOrEmpty(data.Attribute.Router))
-                    {
-                        path = data.Attribute.Router;
-                    }
-                    //调用接口
-                    client.GetAsync($"{data.WebRoot}{path}").Wait();
-                }
+                data.Method.Invoke(controller,null);
             });
         }
     }

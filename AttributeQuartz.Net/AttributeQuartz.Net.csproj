@@ -7,7 +7,22 @@
     <PackageProjectUrl>https://gitee.com/coreyuan/attribute-quartz</PackageProjectUrl>
     <NeutralLanguage />
     <Description>引用这款项目可以使你的接口支持特性定时任务，在控制器下的接口上加上特性，即可实现接口定时执行，具体使用方法可以查看项目url</Description>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
+    <PackAsTool>False</PackAsTool>
+    <RepositoryUrl>https://gitee.com/coreyuan/attribute-quartz</RepositoryUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Version>1.0.1</Version>
+    <Company>Core园主</Company>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

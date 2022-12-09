@@ -13,11 +13,7 @@ namespace AttributeQuartz
         /// 定时任务参数
         /// </summary>
         public string CronExpression { get; set; }
-
-        /// <summary>
-        /// 定时任务执行路由
-        /// </summary>
-        public string Router { get; set; }
+        
 
         /// <summary>
         /// 是否重复
